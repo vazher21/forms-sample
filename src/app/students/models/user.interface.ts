@@ -1,6 +1,7 @@
 import { IAddress } from '../../shared/models/address.interface';
 
 export interface IStudent {
+  id?: number;
   general: IStudentGeneralInfo;
   address: IStudentAddressInfo;
   grades: IStudentGradesInfo;
@@ -16,7 +17,7 @@ export interface IStudentGeneralInfo {
 
 export interface IStudentAddressInfo {
   legal: IAddress;
-  actual: IAddress | null;
+  actual: IAddress;
 }
 
 export interface IStudentGradesInfo {

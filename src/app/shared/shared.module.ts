@@ -7,6 +7,7 @@ import { ErrorMessagesComponent } from './components/error-messages/error-messag
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [ErrorMessagesComponent],
@@ -21,6 +22,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ErrorMessagesComponent,
     MatFormFieldModule,
     MatCheckboxModule,
+    MatTableModule,
   ],
 })
 export class SharedModule {}

@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -20,27 +22,35 @@ import {
 } from '../../models/user.interface';
 import { StudentAvailabilityService } from '../../services/student-availability.service';
 import { existingPinValidator } from '../../validators/pin.validator';
-import { switchMap, tap } from 'rxjs';
+import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { AddressTranslateService } from '../../../shared/services/address-translate.service';
 import { GradeActivityLoggerService } from '../../services/grade-activity-logger.service';
 import { areAddressesEqual } from '../../../shared/helpers/address.helper';
+import { STUDENTS_GRADES } from '../../constants/students-grades';
 
 @Component({
-  selector: 'app-user-form',
-  templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.scss'],
+  selector: 'app-student-form',
+  templateUrl: './student-form.component.html',
+  styleUrls: ['./student-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserFormComponent implements OnInit {
+export class StudentFormComponent implements OnInit {
+  private valueChangesInited = false;
   public _chosenStudent: IStudent | null = null;
   @Input() set chosenStudent(student: IStudent | null) {
     this._chosenStudent = student;
     if (this._chosenStudent) {
+      if (!this.valueChangesInited) {
+        this.onValueChanges();
+      }
       this.fillForm(this._chosenStudent);
     } else {
       this.form.reset();
     }
   }
+  @Output() onCancel = new EventEmitter<void>();
+  @Output() register = new EventEmitter<IStudent>();
+  @Output() update = new EventEmitter<IStudent>();
 
   form = new FormGroup<IStudentForm>({
     general: new FormGroup<IStudentGeneralForm>({
@@ -98,7 +108,7 @@ export class UserFormComponent implements OnInit {
           nonNullable: true,
         }),
       }),
-      actualSameAsLegal: new FormControl<boolean>(false),
+      actualSameAsLegal: new FormControl<boolean | null>(null),
     }),
     grades: new FormGroup<IStudentGradesForm>({
       math: new FormControl<IStudentGrades | null>(null, {
@@ -124,8 +134,9 @@ export class UserFormComponent implements OnInit {
     }),
   });
 
-  showActualAddressGroup = true;
-  showScienceControl = false;
+  showActualAddressGroup$ = new BehaviorSubject(true);
+  showScienceControl$ = new BehaviorSubject(false);
+  gradesCatalog = STUDENTS_GRADES;
 
   constructor(
     private studentAvailabilityService: StudentAvailabilityService,
@@ -138,6 +149,7 @@ export class UserFormComponent implements OnInit {
   }
 
   onValueChanges() {
+    this.valueChangesInited = true;
     this.age.valueChanges
       .pipe(
         tap((age) => {
@@ -147,24 +159,36 @@ export class UserFormComponent implements OnInit {
       )
       .subscribe();
 
-    this.actualSameAsLegal.valueChanges.pipe(
-      tap((checked) => {
-        if (checked) {
-          this.actualGroup.disable();
-          this.showActualAddressGroup = false;
-        } else {
-          this.showActualAddressGroup = true;
-          this.actualGroup.enable();
-        }
-        this.addressGroup.updateValueAndValidity();
-      })
-    );
+    this.actualSameAsLegal.valueChanges
+      .pipe(
+        tap((checked) => {
+          if (checked) {
+            this.actualGroup.disable();
+            this.showActualAddressGroup$.next(false);
+          } else {
+            this.showActualAddressGroup$.next(true);
+            this.actualGroup.enable();
+          }
+          this.addressGroup.updateValueAndValidity();
+        })
+      )
+      .subscribe();
+
+    this.legalCountry.valueChanges
+      .pipe(
+        switchMap((country) =>
+          this.addressTranslateService.translateAddress(country)
+        ),
+        tap((val) => this.legalCountryEng.setValue(val))
+      )
+      .subscribe();
 
     this.legalFull.valueChanges
       .pipe(
         switchMap((address) =>
           this.addressTranslateService.translateAddress(address)
-        )
+        ),
+        tap((val) => this.legalFullEng.setValue(val))
       )
       .subscribe();
 
@@ -172,18 +196,30 @@ export class UserFormComponent implements OnInit {
       .pipe(
         switchMap((address) =>
           this.addressTranslateService.translateAddress(address)
-        )
+        ),
+        tap((val) => this.actualFullEng.setValue(val))
       )
       .subscribe();
 
-    this.gradesGroup.valueChanges.pipe(
-      switchMap(() =>
-        this.gradeActivityLoggerService.logChange(
-          this.gradesGroup.getRawValue(),
-          new Date()
+    this.actualCountry.valueChanges
+      .pipe(
+        switchMap((country) =>
+          this.addressTranslateService.translateAddress(country)
+        ),
+        tap((val) => this.actualCountryEng.setValue(val))
+      )
+      .subscribe();
+
+    this.gradesGroup.valueChanges
+      .pipe(
+        switchMap(() =>
+          this.gradeActivityLoggerService.logChange(
+            this.gradesGroup.getRawValue(),
+            new Date()
+          )
         )
       )
-    );
+      .subscribe();
   }
 
   onAgeValueChangesForPin(age: number | null) {
@@ -197,9 +233,9 @@ export class UserFormComponent implements OnInit {
 
   onAgeValueChangesForGrades(age: number | null) {
     if (age && age >= 10) {
-      this.showScienceControl = true;
+      this.showScienceControl$.next(true);
     } else {
-      this.showScienceControl = false;
+      this.showScienceControl$.next(false);
     }
     this.gradesGroup.updateValueAndValidity();
   }
@@ -212,14 +248,15 @@ export class UserFormComponent implements OnInit {
       address: {
         legal: this.legalGroup.getRawValue(),
         actual: this.actualSameAsLegal.value
-          ? null
-          : this.actualGroup.getRawValue(),
+          ? this.legalGroup.getRawValue()
+          : this.legalGroup.getRawValue(),
       },
       grades: { ...(this.gradesGroup.getRawValue() as IStudentGradesInfo) },
     };
   }
 
   fillForm(student: IStudent): void {
+    console.log('fill form');
     this.name.setValue(student.general.name);
     this.lastName.setValue(student.general.lastName);
     this.age.setValue(student.general.age);
@@ -238,6 +275,8 @@ export class UserFormComponent implements OnInit {
     this.actualSameAsLegal.setValue(
       areAddressesEqual(student.address.legal, student.address.actual)
     );
+
+    console.log(this.actualSameAsLegal.value);
 
     if (student.address.actual) {
       this.actualCountry.setValue(student.address.actual.country);
@@ -336,5 +375,16 @@ export class UserFormComponent implements OnInit {
   }
   get english() {
     return this.gradesGroup.controls.english;
+  }
+
+  onSubmit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const student: IStudent = { ...this._chosenStudent, ...this.readForm() };
+    this._chosenStudent
+      ? this.update.emit(student)
+      : this.register.emit(student);
   }
 }
