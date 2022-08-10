@@ -2,10 +2,20 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   OnInit,
+  Output,
 } from '@angular/core';
-import { ControlContainer, FormGroup } from '@angular/forms';
+import {
+  ControlContainer,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { IStudentGeneralForm } from '../../../models/user-form.interface';
+import { StudentAvailabilityService } from '../../../services/student-availability.service';
+import { existingPinValidator } from '../../../validators/pin.validator';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-student-form-general',
@@ -14,12 +24,51 @@ import { IStudentGeneralForm } from '../../../models/user-form.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StudentFormGeneralComponent implements OnInit {
+  @Output() formCreated = new EventEmitter<FormGroup<IStudentGeneralForm>>();
   form!: FormGroup<IStudentGeneralForm>;
 
-  constructor(private cc: ControlContainer) {}
+  constructor(private studentAvailabilityService: StudentAvailabilityService) {}
 
   ngOnInit(): void {
-    this.form = this.cc.control as FormGroup;
+    this.form = this.createForm();
+    this.valueChanges();
+    this.formCreated.emit(this.form);
+  }
+
+  createForm() {
+    return new FormGroup<IStudentGeneralForm>({
+      age: new FormControl(null, [Validators.required]),
+      personalNumber: new FormControl('', {
+        asyncValidators: existingPinValidator(this.studentAvailabilityService),
+      }),
+      lastName: new FormControl('', {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      name: new FormControl('', {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      sex: new FormControl('', {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+    });
+  }
+
+  valueChanges() {
+    this.age.valueChanges
+      .pipe(
+        tap((age) => {
+          if (age && age >= 18) {
+            this.personalNumber.addValidators(Validators.required);
+          } else {
+            this.personalNumber.removeValidators([Validators.required]);
+          }
+          this.personalNumber.updateValueAndValidity();
+        })
+      )
+      .subscribe();
   }
 
   get name() {

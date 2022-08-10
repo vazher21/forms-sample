@@ -41,7 +41,11 @@
       >
     </div>
   </div>
-  <div class="actual" [formGroup]="actualGroup" *ngIf="showActualGroup">
+  <div
+    class="actual"
+    [formGroup]="actualGroup"
+    *ngIf="showActualAddressGroup$ | async"
+  >
     <h4 class="form-title">Actual address</h4>
     <div class="row">
       <div class="col">

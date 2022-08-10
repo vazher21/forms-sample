@@ -5,16 +5,14 @@
   </div>
   <form [formGroup]="form">
     <app-student-form-general
-      [formGroup]="generalGroup"
+      (formCreated)="form.setControl('general', $event)"
     ></app-student-form-general>
     <app-student-form-address
-      [formGroup]="addressGroup"
-      [showActualGroup]="(showActualAddressGroup$ | async)!"
+      (formCreated)="form.setControl('address', $event)"
     ></app-student-form-address>
     <app-student-form-grades
-      [formGroup]="gradesGroup"
-      [showScienceControl]="(showScienceControl$ | async)!"
-      [gradesCatalog]="gradesCatalog"
+      [age]="age.valueChanges | async"
+      (formCreated)="form.setControl('grades', $event)"
     >
     </app-student-form-grades>
     <div class="actions">

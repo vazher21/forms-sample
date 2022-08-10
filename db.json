@@ -2,8 +2,8 @@
   "students": [
     {
       "general": {
-        "age": "21",
-        "personalNumber": "0192491123",
+        "age": "1",
+        "personalNumber": "0192491123221",
         "lastName": "doe",
         "name": "nick",
         "sex": "male"
@@ -30,6 +30,37 @@
         "science": "C"
       },
       "id": 1
+    },
+    {
+      "general": {
+        "age": "21",
+        "personalNumber": "59950216922",
+        "lastName": "abdushelishvili",
+        "name": "vazha",
+        "sex": "Male"
+      },
+      "address": {
+        "legal": {
+          "country": "georgia",
+          "countryEng": "georgia",
+          "full": "va",
+          "fullEng": "va"
+        },
+        "actual": {
+          "country": "georgia",
+          "countryEng": "georgia",
+          "full": "va",
+          "fullEng": "va"
+        }
+      },
+      "grades": {
+        "math": "B",
+        "history": "C",
+        "arts": "E",
+        "english": "F",
+        "science": "E"
+      },
+      "id": 2
     }
   ]
 }
