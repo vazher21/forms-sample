@@ -1,0 +1,19 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    .col {
+      width: calc(50% - 20px);
+    }
+  }
+
+  .form-title {
+    padding: 20px 0;
+  }
+}

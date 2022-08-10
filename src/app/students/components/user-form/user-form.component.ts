@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -141,7 +142,8 @@ export class UserFormComponent implements OnInit {
   constructor(
     private studentAvailabilityService: StudentAvailabilityService,
     private addressTranslateService: AddressTranslateService,
-    private gradeActivityLoggerService: GradeActivityLoggerService
+    private gradeActivityLoggerService: GradeActivityLoggerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -379,6 +381,7 @@ export class UserFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.invalid) {
+      console.log(this.form);
       this.form.markAllAsTouched();
       return;
     }

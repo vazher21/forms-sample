@@ -1,0 +1,44 @@
+<form class="general" [formGroup]="form">
+  <h4 class="form-title">General Information</h4>
+  <div class="row">
+    <div class="col">
+      <mat-form-field appearance="fill">
+        <mat-label>name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <app-error-messages [control]="name"></app-error-messages>
+    </div>
+    <div class="col">
+      <mat-form-field appearance="fill">
+        <mat-label>last name</mat-label>
+        <input matInput formControlName="lastName" />
+      </mat-form-field>
+      <app-error-messages [control]="lastName"></app-error-messages>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-form-field appearance="fill">
+        <mat-label>sex</mat-label>
+        <input matInput formControlName="sex" />
+      </mat-form-field>
+      <app-error-messages [control]="sex"></app-error-messages>
+    </div>
+    <div class="col">
+      <mat-form-field appearance="fill">
+        <mat-label>age</mat-label>
+        <input matInput formControlName="age" />
+      </mat-form-field>
+      <app-error-messages [control]="age"></app-error-messages>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <mat-form-field appearance="fill">
+        <mat-label>Personal number</mat-label>
+        <input matInput formControlName="personalNumber" />
+      </mat-form-field>
+      <app-error-messages [control]="personalNumber"></app-error-messages>
+    </div>
+  </div>
+</form>
