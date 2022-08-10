@@ -31,11 +31,13 @@ export class StudentFormGradesComponent implements OnInit {
 
   @Input() set age(age: number | null) {
     if (age && age >= 10) {
+      this.science.setValidators(Validators.required);
       this.showScienceControl = true;
     } else {
+      this.science.clearValidators();
       this.showScienceControl = false;
     }
-    this.form?.updateValueAndValidity();
+    this.science?.updateValueAndValidity();
   }
   showScienceControl: boolean = false;
 

@@ -23,11 +23,11 @@
         }
       },
       "grades": {
-        "math": "A",
-        "history": "B",
-        "arts": "E",
-        "english": "E",
-        "science": "C"
+        "math": "D",
+        "history": "C",
+        "arts": "D",
+        "english": "D",
+        "science": null
       },
       "id": 1
     },
@@ -61,6 +61,37 @@
         "science": "E"
       },
       "id": 2
+    },
+    {
+      "general": {
+        "age": "2",
+        "personalNumber": "sad21",
+        "lastName": "23",
+        "name": "213",
+        "sex": "asd"
+      },
+      "address": {
+        "legal": {
+          "country": "asd",
+          "countryEng": "asd",
+          "full": "asd",
+          "fullEng": "asd"
+        },
+        "actual": {
+          "country": "asd",
+          "countryEng": "asd",
+          "full": "asd",
+          "fullEng": "asd"
+        }
+      },
+      "grades": {
+        "math": "C",
+        "history": "E",
+        "arts": "C",
+        "english": "D",
+        "science": null
+      },
+      "id": 3
     }
   ]
 }
