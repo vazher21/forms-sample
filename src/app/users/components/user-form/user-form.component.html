@@ -1,0 +1,180 @@
+<div class="wrapper">
+  <h3>Student {{ _chosenStudent ? "Update" : "Registration" }}</h3>
+  <form [formGroup]="form">
+    <div class="general" [formGroup]="generalGroup">
+      <h4 class="form-title">General Information</h4>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>name</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+          <app-error-messages [control]="name"></app-error-messages>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>last name</mat-label>
+            <input matInput formControlName="lastName" />
+          </mat-form-field>
+          <app-error-messages [control]="lastName"></app-error-messages>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>sex</mat-label>
+            <input matInput formControlName="sex" />
+          </mat-form-field>
+          <app-error-messages [control]="sex"></app-error-messages>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>age</mat-label>
+            <input matInput formControlName="age" />
+          </mat-form-field>
+          <app-error-messages [control]="age"></app-error-messages>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Personal number</mat-label>
+            <input matInput formControlName="personalNumber" />
+          </mat-form-field>
+          <app-error-messages [control]="personalNumber"></app-error-messages>
+        </div>
+      </div>
+    </div>
+    <div class="address" [formGroup]="addressGroup">
+      <div class="legal" [formGroup]="legalGroup">
+        <h4 class="form-title">Legal address</h4>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>country</mat-label>
+              <input matInput formControlName="country" />
+            </mat-form-field>
+            <app-error-messages [control]="legalCountry"></app-error-messages>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>Country in english</mat-label>
+              <input matInput formControlName="country" />
+            </mat-form-field>
+            <app-error-messages
+              [control]="legalCountryEng"
+            ></app-error-messages>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>full address</mat-label>
+              <input matInput formControlName="full" />
+            </mat-form-field>
+            <app-error-messages [control]="legalFull"></app-error-messages>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>full address in english</mat-label>
+              <input matInput formControlName="fullEng" />
+            </mat-form-field>
+            <app-error-messages [control]="legalFullEng"></app-error-messages>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-checkbox formControlName="actualSameAsLegal"
+            >Actual same as Legal</mat-checkbox
+          >
+        </div>
+      </div>
+      <div
+        class="actual"
+        [formGroup]="actualGroup"
+        *ngIf="showActualAddressGroup"
+      >
+        <h4 class="form-title">Actual address</h4>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>country</mat-label>
+              <input matInput formControlName="country" />
+            </mat-form-field>
+            <app-error-messages [control]="actualCountry"></app-error-messages>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>Country in english</mat-label>
+              <input matInput formControlName="countryEng" />
+            </mat-form-field>
+            <app-error-messages
+              [control]="actualCountryEng"
+            ></app-error-messages>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>full address</mat-label>
+              <input matInput formControlName="full" />
+            </mat-form-field>
+            <app-error-messages [control]="actualFull"></app-error-messages>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="fill">
+              <mat-label>full address in english</mat-label>
+              <input matInput formControlName="fullEng" />
+            </mat-form-field>
+            <app-error-messages [control]="actualFullEng"></app-error-messages>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grades" [formGroup]="gradesGroup">
+      <h4 class="form-title">Grades</h4>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Math</mat-label>
+            <input matInput formControlName="math" />
+          </mat-form-field>
+          <app-error-messages [control]="math"></app-error-messages>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>History</mat-label>
+            <input matInput formControlName="history" />
+          </mat-form-field>
+          <app-error-messages [control]="history"></app-error-messages>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Arts</mat-label>
+            <input matInput formControlName="arts" />
+          </mat-form-field>
+          <app-error-messages [control]="arts"></app-error-messages>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>English</mat-label>
+            <input matInput formControlName="english" />
+          </mat-form-field>
+          <app-error-messages [control]="english"></app-error-messages>
+        </div>
+      </div>
+      <div class="row" *ngIf="showScienceControl">
+        <div class="col">
+          <mat-form-field appearance="fill">
+            <mat-label>Science</mat-label>
+            <input matInput formControlName="science" />
+          </mat-form-field>
+          <app-error-messages [control]="science"></app-error-messages>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

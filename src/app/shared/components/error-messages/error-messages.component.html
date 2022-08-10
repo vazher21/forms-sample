@@ -1,0 +1,10 @@
+<ng-container *ngIf="control && control?.errors && control.touched">
+  <div class="error">
+    <ng-container *ngIf="getFirstErrorsName() as error">
+      <ng-container [ngSwitch]="error!.errorName">
+        <p *ngSwitchCase="'required'">{{ errorMessages.required }}</p>
+        <p *ngSwitchDefault>{{ error!.errorMessage }}</p>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>
