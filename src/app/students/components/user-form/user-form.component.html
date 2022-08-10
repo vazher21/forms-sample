@@ -1,5 +1,8 @@
 <div class="wrapper">
-  <h3>Student {{ _chosenStudent ? "Update" : "Registration" }}</h3>
+  <div class="hood">
+    <h2>Student {{ _chosenStudent ? "Update" : "Registration" }}</h2>
+    <button mat-button color="primary" (click)="onCancel.emit()">Cancel</button>
+  </div>
   <form [formGroup]="form">
     <div class="general" [formGroup]="generalGroup">
       <h4 class="form-title">General Information</h4>
@@ -59,7 +62,7 @@
           <div class="col">
             <mat-form-field appearance="fill">
               <mat-label>Country in english</mat-label>
-              <input matInput formControlName="country" />
+              <input matInput formControlName="countryEng" />
             </mat-form-field>
             <app-error-messages
               [control]="legalCountryEng"
@@ -93,7 +96,7 @@
       <div
         class="actual"
         [formGroup]="actualGroup"
-        *ngIf="showActualAddressGroup"
+        *ngIf="showActualAddressGroup$ | async"
       >
         <h4 class="form-title">Actual address</h4>
         <div class="row">
@@ -134,47 +137,74 @@
     </div>
     <div class="grades" [formGroup]="gradesGroup">
       <h4 class="form-title">Grades</h4>
+
+      <ng-template
+        #gradeChooser
+        let-gradeControl="gradeControl"
+        let-label="label"
+      >
+        <mat-form-field appearance="fill">
+          <mat-label>{{ label }}</mat-label>
+          <mat-select [formControl]="gradeControl">
+            <mat-option *ngFor="let grade of gradesCatalog" [value]="grade">
+              {{ grade }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-error-messages [control]="gradeControl"></app-error-messages>
+      </ng-template>
+
       <div class="row">
         <div class="col">
-          <mat-form-field appearance="fill">
-            <mat-label>Math</mat-label>
-            <input matInput formControlName="math" />
-          </mat-form-field>
-          <app-error-messages [control]="math"></app-error-messages>
+          <ng-container
+            *ngTemplateOutlet="
+              gradeChooser;
+              context: { gradeControl: math, label: 'Math' }
+            "
+          ></ng-container>
         </div>
         <div class="col">
-          <mat-form-field appearance="fill">
-            <mat-label>History</mat-label>
-            <input matInput formControlName="history" />
-          </mat-form-field>
-          <app-error-messages [control]="history"></app-error-messages>
+          <ng-container
+            *ngTemplateOutlet="
+              gradeChooser;
+              context: { gradeControl: history, label: 'History' }
+            "
+          ></ng-container>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <mat-form-field appearance="fill">
-            <mat-label>Arts</mat-label>
-            <input matInput formControlName="arts" />
-          </mat-form-field>
-          <app-error-messages [control]="arts"></app-error-messages>
+          <ng-container
+            *ngTemplateOutlet="
+              gradeChooser;
+              context: { gradeControl: arts, label: 'Arts' }
+            "
+          ></ng-container>
         </div>
         <div class="col">
-          <mat-form-field appearance="fill">
-            <mat-label>English</mat-label>
-            <input matInput formControlName="english" />
-          </mat-form-field>
-          <app-error-messages [control]="english"></app-error-messages>
+          <ng-container
+            *ngTemplateOutlet="
+              gradeChooser;
+              context: { gradeControl: english, label: 'English' }
+            "
+          ></ng-container>
         </div>
       </div>
-      <div class="row" *ngIf="showScienceControl">
+      <div class="row" *ngIf="showScienceControl$ | async">
         <div class="col">
-          <mat-form-field appearance="fill">
-            <mat-label>Science</mat-label>
-            <input matInput formControlName="science" />
-          </mat-form-field>
-          <app-error-messages [control]="science"></app-error-messages>
+          <ng-container
+            *ngTemplateOutlet="
+              gradeChooser;
+              context: { gradeControl: science, label: 'Science' }
+            "
+          ></ng-container>
         </div>
       </div>
+    </div>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="onSubmit()">
+        {{ _chosenStudent ? "Update" : "Register" }}
+      </button>
     </div>
   </form>
 </div>

@@ -1,0 +1,35 @@
+{
+  "students": [
+    {
+      "general": {
+        "age": "21",
+        "personalNumber": "0192491123",
+        "lastName": "doe",
+        "name": "nick",
+        "sex": "male"
+      },
+      "address": {
+        "legal": {
+          "country": "საქართველო",
+          "countryEng": "saqartvelo",
+          "full": "თბილისი, ვაჟა-ფშაველა",
+          "fullEng": "tbilisi, vaja-fshavela"
+        },
+        "actual": {
+          "country": "საქართველო",
+          "countryEng": "saqartvelo",
+          "full": "თბილისი, ვაჟა-ფშაველა",
+          "fullEng": "tbilisi, vaja-fshavela"
+        }
+      },
+      "grades": {
+        "math": "A",
+        "history": "B",
+        "arts": "E",
+        "english": "E",
+        "science": "C"
+      },
+      "id": 1
+    }
+  ]
+}

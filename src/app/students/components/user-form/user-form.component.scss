@@ -1,12 +1,18 @@
 .wrapper {
   background-color: white;
+  border: 1px solid black;
+  padding: 15px 60px;
 }
+.hood {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 form {
-  padding: 15px 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid black;
 
   .row {
     display: flex;
