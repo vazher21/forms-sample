@@ -15,11 +15,11 @@
     ></app-students-list>
   </div>
 
-  <app-user-form
+  <app-student-form
     *ngIf="registrationMode || selectedStudent"
     [chosenStudent]="selectedStudent"
     (onCancel)="onCloseForm()"
     (update)="updateStudent($event)"
     (register)="registerStudent($event)"
-  ></app-user-form>
+  ></app-student-form>
 </div>
