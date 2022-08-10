@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <div
+    class="step"
+    *ngFor="let step of steps"
+    (click)="onStepChange(step)"
+    [ngClass]="{
+      active: currentStep === step.index,
+      passed: currentStep > step.index
+    }"
+  >
+    <p>
+      {{ step.label }}
+    </p>
+  </div>
+</div>

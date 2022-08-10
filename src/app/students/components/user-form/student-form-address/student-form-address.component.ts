@@ -1,23 +1,10 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
 } from '@angular/core';
-import {
-  ControlContainer,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
-import {
-  IStudentAddressForm,
-  IStudentAddressFullForm,
-} from '../../../models/user-form.interface';
-import { BehaviorSubject, switchMap, tap } from 'rxjs';
-import { AddressTranslateService } from '../../../../shared/services/address-translate.service';
+import { BaseStepComponent } from '../../../../shared/models/base-step-component';
+import { StudentFormAddressService } from './student-form-address.service';
 
 @Component({
   selector: 'app-student-form-address',
@@ -25,149 +12,51 @@ import { AddressTranslateService } from '../../../../shared/services/address-tra
   styleUrls: ['../../../styles/_form.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StudentFormAddressComponent implements OnInit {
-  @Output() formCreated = new EventEmitter<
-    FormGroup<IStudentAddressFullForm>
-  >();
+export class StudentFormAddressComponent extends BaseStepComponent {
+  form = this.studentFormAddressService.form;
+  showActualAddressGroup$ =
+    this.studentFormAddressService.showActualAddressGroup$;
 
-  form!: FormGroup<IStudentAddressFullForm>;
-  showActualAddressGroup$ = new BehaviorSubject(true);
-  constructor(private addressTranslateService: AddressTranslateService) {}
-
-  ngOnInit(): void {
-    this.form = this.createForm();
-    this.valueChanges();
-    this.formCreated.emit(this.form);
+  constructor(
+    private studentFormAddressService: StudentFormAddressService,
+    private cdr: ChangeDetectorRef
+  ) {
+    super(studentFormAddressService, cdr);
   }
 
-  createForm(): FormGroup<IStudentAddressFullForm> {
-    return new FormGroup<IStudentAddressFullForm>({
-      actual: new FormGroup<IStudentAddressForm>({
-        country: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-        countryEng: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-        full: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-        fullEng: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-      }),
-      legal: new FormGroup<IStudentAddressForm>({
-        country: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-        countryEng: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-        full: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-        fullEng: new FormControl<string>('', {
-          validators: [Validators.required],
-          nonNullable: true,
-        }),
-      }),
-      actualSameAsLegal: new FormControl<boolean | null>(null),
-    });
-  }
-
-  valueChanges() {
-    this.actualSameAsLegal.valueChanges
-      .pipe(
-        tap((checked) => {
-          if (checked) {
-            this.actualGroup.disable();
-            this.showActualAddressGroup$.next(false);
-            console.log('hide');
-          } else {
-            this.showActualAddressGroup$.next(true);
-            this.actualGroup.enable();
-          }
-          this.form!.updateValueAndValidity();
-        })
-      )
-      .subscribe();
-
-    this.legalCountry.valueChanges
-      .pipe(
-        switchMap((country) =>
-          this.addressTranslateService.translateAddress(country)
-        ),
-        tap((val) => this.legalCountryEng.setValue(val))
-      )
-      .subscribe();
-
-    this.legalFull.valueChanges
-      .pipe(
-        switchMap((address) =>
-          this.addressTranslateService.translateAddress(address)
-        ),
-        tap((val) => this.legalFullEng.setValue(val))
-      )
-      .subscribe();
-
-    this.actualFull.valueChanges
-      .pipe(
-        switchMap((address) =>
-          this.addressTranslateService.translateAddress(address)
-        ),
-        tap((val) => this.actualFullEng.setValue(val))
-      )
-      .subscribe();
-
-    this.actualCountry.valueChanges
-      .pipe(
-        switchMap((country) =>
-          this.addressTranslateService.translateAddress(country)
-        ),
-        tap((val) => this.actualCountryEng.setValue(val))
-      )
-      .subscribe();
-  }
   get legalGroup() {
-    return this.form.controls.legal;
+    return this.studentFormAddressService.legalGroup;
   }
   get actualGroup() {
-    return this.form.controls.actual;
+    return this.studentFormAddressService.actualGroup;
   }
   get actualSameAsLegal() {
-    return this.form.controls.actualSameAsLegal;
+    return this.studentFormAddressService.actualSameAsLegal;
   }
 
   get legalCountry() {
-    return this.legalGroup.controls.country;
+    return this.studentFormAddressService.legalCountry;
   }
   get legalCountryEng() {
-    return this.legalGroup.controls.countryEng;
+    return this.studentFormAddressService.legalCountryEng;
   }
   get legalFull() {
-    return this.legalGroup.controls.full;
+    return this.studentFormAddressService.legalFull;
   }
   get legalFullEng() {
-    return this.legalGroup.controls.fullEng;
+    return this.studentFormAddressService.legalFullEng;
   }
 
   get actualCountry() {
-    return this.actualGroup.controls.country;
+    return this.studentFormAddressService.actualCountry;
   }
   get actualCountryEng() {
-    return this.actualGroup.controls.countryEng;
+    return this.studentFormAddressService.actualCountryEng;
   }
   get actualFull() {
-    return this.actualGroup.controls.full;
+    return this.studentFormAddressService.actualFull;
   }
   get actualFullEng() {
-    return this.actualGroup.controls.fullEng;
+    return this.studentFormAddressService.actualCountryEng;
   }
 }

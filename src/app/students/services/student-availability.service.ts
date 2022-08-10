@@ -8,6 +8,6 @@ export class StudentAvailabilityService {
   constructor() {}
 
   public isPersonalNumberAvailable(pin: string) {
-    return of(Math.random() < 0.5).pipe(delay(200));
+    return of(Math.random() < 0.9).pipe(delay(200));
   }
 }

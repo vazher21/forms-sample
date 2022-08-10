@@ -1,0 +1,25 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .step {
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    background: #000;
+    &.active {
+      background-color: #318ce7;
+      color: white;
+    }
+    &.passed {
+      background-color: #00cc99;
+      color: white;
+    }
+  }
+}

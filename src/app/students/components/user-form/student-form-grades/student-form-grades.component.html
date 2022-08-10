@@ -49,7 +49,7 @@
       ></ng-container>
     </div>
   </div>
-  <div class="row" *ngIf="showScienceControl">
+  <div class="row" *ngIf="showScienceControl$ | async">
     <div class="col">
       <ng-container
         *ngTemplateOutlet="

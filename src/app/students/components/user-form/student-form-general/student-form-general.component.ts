@@ -2,20 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  OnInit,
-  Output,
 } from '@angular/core';
-import {
-  ControlContainer,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { IStudentGeneralForm } from '../../../models/user-form.interface';
-import { StudentAvailabilityService } from '../../../services/student-availability.service';
-import { existingPinValidator } from '../../../validators/pin.validator';
-import { tap } from 'rxjs';
+import { BaseStepComponent } from '../../../../shared/models/base-step-component';
+import { StudentFormGeneralService } from './student-form-general.service';
 
 @Component({
   selector: 'app-student-form-general',
@@ -23,67 +12,29 @@ import { tap } from 'rxjs';
   styleUrls: ['../../../styles/_form.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StudentFormGeneralComponent implements OnInit {
-  @Output() formCreated = new EventEmitter<FormGroup<IStudentGeneralForm>>();
-  form!: FormGroup<IStudentGeneralForm>;
+export class StudentFormGeneralComponent extends BaseStepComponent {
+  form = this.studentFormGeneralService.form;
 
-  constructor(private studentAvailabilityService: StudentAvailabilityService) {}
-
-  ngOnInit(): void {
-    this.form = this.createForm();
-    this.valueChanges();
-    this.formCreated.emit(this.form);
-  }
-
-  createForm() {
-    return new FormGroup<IStudentGeneralForm>({
-      age: new FormControl(null, [Validators.required]),
-      personalNumber: new FormControl('', {
-        asyncValidators: existingPinValidator(this.studentAvailabilityService),
-      }),
-      lastName: new FormControl('', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-      name: new FormControl('', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-      sex: new FormControl('', {
-        validators: [Validators.required],
-        nonNullable: true,
-      }),
-    });
-  }
-
-  valueChanges() {
-    this.age.valueChanges
-      .pipe(
-        tap((age) => {
-          if (age && age >= 18) {
-            this.personalNumber.addValidators(Validators.required);
-          } else {
-            this.personalNumber.removeValidators([Validators.required]);
-          }
-          this.personalNumber.updateValueAndValidity();
-        })
-      )
-      .subscribe();
+  constructor(
+    private studentFormGeneralService: StudentFormGeneralService,
+    private cdr: ChangeDetectorRef
+  ) {
+    super(studentFormGeneralService, cdr);
   }
 
   get name() {
-    return this.form.controls.name;
+    return this.studentFormGeneralService.name;
   }
   get lastName() {
-    return this.form.controls.lastName;
+    return this.studentFormGeneralService.lastName;
   }
   get age() {
-    return this.form.controls.age;
+    return this.studentFormGeneralService.age;
   }
   get sex() {
-    return this.form.controls.sex;
+    return this.studentFormGeneralService.sex;
   }
   get personalNumber() {
-    return this.form.controls.personalNumber;
+    return this.studentFormGeneralService.personalNumber;
   }
 }

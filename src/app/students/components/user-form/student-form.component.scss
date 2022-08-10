@@ -1,12 +1,12 @@
 .wrapper {
   background-color: white;
-  border: 1px solid black;
   padding: 15px 60px;
 }
 .hood {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 form {
@@ -27,4 +27,9 @@ form {
   .form-title {
     padding: 20px 0;
   }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
 }
