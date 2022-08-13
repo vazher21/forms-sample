@@ -61,16 +61,17 @@ export class StudentFormComponent {
   @Output() register = new EventEmitter<IStudent>();
   @Output() update = new EventEmitter<IStudent>();
 
-  private indexToService: { [key: string]: BaseStepService<any> } = {
-    0: this.studentFormGeneralService,
-    1: this.studentFormAddressService,
-    2: this.studentFormGradesService,
-  };
+  // @ts-ignore
+  private indexToService: Map<number, BaseStepService<any>> = new Map([
+    [0, this.studentFormGeneralService],
+    [1, this.studentFormAddressService],
+    [2, this.studentFormGradesService],
+  ]);
 
   public steps: IStep[] = [
-    { index: 0, label: 'General information' },
-    { index: 1, label: 'Address information' },
-    { index: 2, label: 'Grades information' },
+    { index: 0, label: 'General' },
+    { index: 1, label: 'Address' },
+    { index: 2, label: 'Grades' },
   ];
 
   constructor(
@@ -95,11 +96,10 @@ export class StudentFormComponent {
 
   onStepChange(step: IStep) {
     for (let i = 0; i < step.index; i++) {
-      if (!this.indexToService[i].isValid()) {
-        this.indexToService[i].markAllAsTouched();
-        this.indexToService[i].detectChanges$.next();
+      if (!this.indexToService.get(i)!.isValid()) {
+        this.indexToService.get(i)!.markAllAsTouched();
+        this.indexToService.get(i)!.detectChanges$.next();
         this.currentStep = i;
-        console.log(this.indexToService[i].form);
         return;
       }
     }
@@ -111,8 +111,8 @@ export class StudentFormComponent {
   }
 
   onSubmit() {
-    if (!this.indexToService[this.currentStep].isValid()) {
-      this.indexToService[this.currentStep].markAllAsTouched();
+    if (!this.indexToService.get(this.currentStep)!.isValid()) {
+      this.indexToService.get(this.currentStep)!.markAllAsTouched();
       return;
     }
     const student: IStudent = { ...this._chosenStudent, ...this.readForm() };

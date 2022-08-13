@@ -3,16 +3,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 99%;
+    z-index: 1;
+    border: 1px solid black;
+  }
+
   .step {
     cursor: pointer;
+    position: relative;
+    z-index: 2;
     width: 70px;
     height: 70px;
-    line-height: 70px;
     border-radius: 50%;
     font-size: 14px;
     color: #fff;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #000;
+    p {
+      text-align: center;
+      margin-bottom: 0;
+    }
     &.active {
       background-color: #318ce7;
       color: white;
